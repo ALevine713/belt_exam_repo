@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quotes</title>
+  </head>
+  <body>
+    <a href="/logout">Logout</a>
+    <h3>Welcome, {{ request.session.alias }}!</h3>
+    <div class="quotable_quotes">
+      <h4>Quotable Quotes</h4>
+      {% for quote in other_quotes %}
+        <fieldset>
+          <form action="/add_favorite/{{ quote.id}}" method="post">
+            {% csrf_token %}
+            <p>{{ quote.author }}: {{quote.quote}}</p>
+            posted by: <a href="/users/{{quote.creator.id}}">{{ quote.creator.alias }}</a>
+            <button>Add to My List</button>
+          </form>
+        </fieldset>
+      {% endfor %}
+
+    </div>
+    <div class="favorite_quotes">
+      <h4>Your Favorite Quotes</h4>
+      {% for favorite in user_favorites %}
+        <fieldset>
+          <form action="/remove_favorite/{{ favorite.id }}" method="post">
+            {% csrf_token %}
+            <p>{{ favorite.author }}: {{favorite.quote}}</p>
+            posted by: <a href="/users/{{favorite.creator.id}}">{{ favorite.creator.alias }}</a>
+            <button>Remove From My List</button>
+          </form>
+        </fieldset>
+      {% endfor %}
+
+      <div class="add quote">
+        <h4>Contribute a Quote</h4>
+        <form action="/add_quote" method="post">
+          {% csrf_token %}
+          <label for="author">
+            Quoted By:
+            <input type="text" name="author">
+          </label>
+          <label for="quote">
+            Message:
+            <input type="textarea" name="quote">
+          </label>
+          <button>Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
